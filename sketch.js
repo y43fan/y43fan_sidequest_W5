@@ -26,6 +26,8 @@ let level;
 let player;
 let cam;
 
+let dreamMode = true;
+
 function preload() {
   allLevelsData = loadJSON("levels.json"); // levels.json beside index.html [web:122]
 }
@@ -61,8 +63,13 @@ function draw() {
   }
 
   // --- view state (data-driven smoothing) ---
-  cam.followSideScrollerX(player.x, level.camLerp);
-  cam.y = 0;
+  if (dreamMode) {
+    cam.updateDream();
+  } else {
+    cam.followSideScrollerX(player.x, level.camLerp);
+    cam.y = 0;
+  }
+
   cam.clampToWorld(level.w, level.h);
 
   // --- draw ---
@@ -96,6 +103,9 @@ function draw() {
 function keyPressed() {
   if (key === " " || key === "W" || key === "w" || keyCode === UP_ARROW) {
     player.tryJump();
+  }
+  if (key === "m" || key === "M") {
+    dreamMode = !dreamMode;
   }
   if (key === "r" || key === "R") loadLevel(levelIndex);
 }
